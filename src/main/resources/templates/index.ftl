@@ -1,10 +1,5 @@
-<#ftl strip_whitespace = true>
-
-<#setting boolean_format=computer>
-<#import "/libs/mylib.ftl" as my>
-
 <#assign charset="UTF-8">
-<#assign title="Example">
+<#assign title="Homepage Freemarker">
 <#assign content>
 This is content
 </#assign>
@@ -15,13 +10,7 @@ This is content
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
-    <body><#if content??>
-        <div>${content}</div>
-		<#else>
-        <div>No content</div>
-		</#if>
-		<@my.function>parameter</@my.function>
-
-
+    <body>
+        <div>HOME PAGE</div>
         </body>
     </html>

@@ -8,14 +8,13 @@ package com.example.finaldemo.service;
 //<editor-fold defaultstate="collapsed" desc="IMPORT">
 import com.example.finaldemo.dto.UserDTO;
 import java.util.List;
-import org.springframework.stereotype.Service;
 //</editor-fold>
 
 /**
  *
  * @author Nguyen Duc Nhat Anh
  */
-@Service
+
 public interface UserService {
 
     boolean checkLogin(String username, String password);
@@ -23,6 +22,8 @@ public interface UserService {
     String createUser(UserDTO userDTO);
 
     String updateUser(UserDTO userDTO);
+    
+    String changPassword(int id , String newPassword);
     
     String removeUser(int id);
 

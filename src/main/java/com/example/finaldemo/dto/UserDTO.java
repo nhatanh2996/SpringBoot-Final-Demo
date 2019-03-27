@@ -1,8 +1,11 @@
 
 package com.example.finaldemo.dto;
 
-import java.io.Serializable;
 
+//<editor-fold defaultstate="collapsed" desc="IMPORT">
+import com.example.finaldemo.my_utils.MyUtils;
+import java.io.Serializable;
+//</editor-fold>
 /**
  *
  * @author Nguyen Duc Nhat Anh
@@ -58,19 +61,19 @@ private String address;
     public UserDTO() {
     }
 
-    public UserDTO(int id, String username, String password, String name, String address) {
-        this.id = id;
+
+
+    public UserDTO(int id ,String username, String password, String name, String address) {
+        this.id= id;
         this.username = username;
         this.password = password;
         this.name = name;
         this.address = address;
     }
 
-    public UserDTO(int id, String username, String password, String name) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.name = name;
+    @Override
+    public String toString() {
+        return "UserDTO{" + "id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", address=" + address + '}';
     }
     
     

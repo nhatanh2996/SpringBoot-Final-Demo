@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import com.example.finaldemo.mysql_utils.MysqlCon;
+import java.util.ArrayList;
 //</editor-fold>
 
 /**
@@ -18,48 +19,6 @@ import com.example.finaldemo.mysql_utils.MysqlCon;
  */
 public class UserDAO implements Serializable {
 
-    public boolean checkLogin(String username, String password) {
-        Connection con = null;
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        try {
-            con = MysqlCon.getConnection();
-
-            if (con != null) {
-                String sql = "SELECT * FROM user WHERE username = ? AND password = ?";
-
-                pstm = con.prepareStatement(sql);
-
-                pstm.setString(1, username);
-                pstm.setString(2, password);
-
-                rs = pstm.executeQuery();
-
-                if (rs.next()) {
-                    return true;
-                }
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (pstm != null) {
-                    pstm.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
     public String addNewUser(UserDTO userDTO) {
         Connection con = null;
         PreparedStatement pstm = null;
@@ -68,19 +27,20 @@ public class UserDAO implements Serializable {
             con = MysqlCon.getConnection();
 
             if (con != null) {
-                String sql = "INSERT INTO user (id, username, password, name) VALUES (?,?, ?, ?)";
+                String sql = "INSERT INTO user (id, username, password, name, address) VALUES (?,?, ?, ?, ?)";
                 pstm = con.prepareStatement(sql);
                 pstm.setInt(1, userDTO.getId());
                 pstm.setString(2, userDTO.getUsername());
                 pstm.setString(3, userDTO.getPassword());
                 pstm.setString(4, userDTO.getName());
+                pstm.setString(5, userDTO.getAddress());
 
                 pstm.executeUpdate();
                 return "add_success";
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return "add_failed";
+            return "add_failed_SQL_error";
 
         } finally {
             try {
@@ -97,8 +57,7 @@ public class UserDAO implements Serializable {
                 e.printStackTrace();
             }
         }
-        String msg;
-        return "add_failed";
+        return "add_failed_SQL_error";
 
     }
 
@@ -110,12 +69,11 @@ public class UserDAO implements Serializable {
             con = MysqlCon.getConnection();
 
             if (con != null) {
-                String sql = "UPDATE  user SET username = ?, password = ?, name = ? WHERE id = ?";
+                String sql = "UPDATE  user SET name = ?, address = ? WHERE id = ?";
                 pstm = con.prepareStatement(sql);
-                pstm.setString(1, userDTOEdit.getUsername());
-                pstm.setString(2, userDTOEdit.getPassword());
-                pstm.setString(3, userDTOEdit.getName());
-                pstm.setInt(4, userDTOEdit.getId());
+                pstm.setString(1, userDTOEdit.getName());
+                pstm.setString(2, userDTOEdit.getAddress());
+                pstm.setInt(3, userDTOEdit.getId());
 
                 pstm.executeUpdate();
                 return "edit_success";
@@ -142,26 +100,25 @@ public class UserDAO implements Serializable {
         return "edit_failed";
     }
 
-    public String removeUser(int userId) {
+    public String changePassword(int id, String newPassword) {
         Connection con = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
         try {
-            
             con = MysqlCon.getConnection();
-            
-            if (con != null) {
-                String sql = "UPDATE  user  WHERE id = ?";
-                pstm = con.prepareStatement(sql);
 
-                pstm.setInt(1, userId);
+            if (con != null) {
+                String sql = "UPDATE  user SET password = ? WHERE id = ?";
+                pstm = con.prepareStatement(sql);
+                pstm.setString(1, newPassword);
+                pstm.setInt(2, id);
 
                 pstm.executeUpdate();
-                return "remove_success";
+                return "change_password_success";
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return "remove_failed";
+            return "change_password_failed";
         } finally {
             try {
                 if (rs != null) {
@@ -175,15 +132,54 @@ public class UserDAO implements Serializable {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                return "remove_failed";
+                return "change_password_failed";
             }
         }
-        return "remove_failed";
+        return "change_password_failed";
+    }
+
+    public String removeUser(int userId) {
+        Connection con = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        try {
+
+            con = MysqlCon.getConnection();
+
+            if (con != null) {
+                String sql = "DELETE FROM  user  WHERE id = ?";
+                pstm = con.prepareStatement(sql);
+
+                pstm.setInt(1, userId);
+
+                pstm.executeUpdate();
+                return "remove_success";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "remove_failed_SQL_error";
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "remove_failed_SQL_error";
+            }
+        }
+        return "remove_failed_SQL_error";
 
     }
 
     public UserDTO findUserByUsername(String username) {
-        UserDTO resultUser = null;
+        UserDTO resultUser = new UserDTO();
         Connection con = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
@@ -198,13 +194,14 @@ public class UserDAO implements Serializable {
                 pstm.setString(1, username);
 
                 rs = pstm.executeQuery();
-
                 if (rs.next()) {
 //                    resultUser = (UserDTO) rs.getObject(0);
                     resultUser.setId(rs.getInt("id"));
                     resultUser.setUsername(rs.getString("username"));
                     resultUser.setPassword(rs.getString("password"));
                     resultUser.setName(rs.getString("name"));
+                    resultUser.setAddress(rs.getString("address"));
+                    return resultUser;
                 }
 
             }
@@ -226,14 +223,15 @@ public class UserDAO implements Serializable {
             }
 
         }
-        return resultUser;
+        return null;
     }
 
     public List<UserDTO> findAll() {
-        List<UserDTO> resultListUser = null;
+        List<UserDTO> resultListUser = new ArrayList<>();
         Connection con = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
+        
         try {
             con = MysqlCon.getConnection();
 
@@ -251,7 +249,10 @@ public class UserDAO implements Serializable {
                     userDTO.setUsername(rs.getString("username"));
                     userDTO.setPassword(rs.getString("password"));
                     userDTO.setName(rs.getString("name"));
+                    userDTO.setAddress(rs.getString("address"));
+
                     resultListUser.add(userDTO);
+                    
                 }
             }
         } catch (Exception e) {
@@ -275,7 +276,7 @@ public class UserDAO implements Serializable {
     }
 
     public UserDTO findUserById(int userId) {
-        UserDTO resultUser = null;
+        UserDTO resultUser = new UserDTO();
         Connection con = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
@@ -296,6 +297,9 @@ public class UserDAO implements Serializable {
                     resultUser.setUsername(rs.getString("username"));
                     resultUser.setPassword(rs.getString("password"));
                     resultUser.setName(rs.getString("name"));
+                    resultUser.setAddress(rs.getString("address"));
+
+                    return resultUser;
                 }
 
             }
@@ -317,11 +321,11 @@ public class UserDAO implements Serializable {
             }
 
         }
-        return resultUser;
+        return null;
     }
 
     public List<UserDTO> findAllUserByNameContains(String name) {
-        List<UserDTO> resultListUser = null;
+        List<UserDTO> resultListUser = new ArrayList<UserDTO>();
         Connection con = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
@@ -343,9 +347,9 @@ public class UserDAO implements Serializable {
                     userDTO.setUsername(rs.getString("username"));
                     userDTO.setPassword(rs.getString("password"));
                     userDTO.setName(rs.getString("name"));
+                    userDTO.setAddress(rs.getString("address"));
                     resultListUser.add(userDTO);
-                    System.out.println("nnnn");
-                    
+
                 }
             }
         } catch (Exception e) {

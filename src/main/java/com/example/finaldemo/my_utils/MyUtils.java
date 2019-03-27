@@ -1,7 +1,9 @@
 package com.example.finaldemo.my_utils;
 
+//<editor-fold defaultstate="collapsed" desc="IMPORT">
 import java.util.Random;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//</editor-fold>
 
 /**
  *

@@ -1,10 +1,11 @@
 
 package com.example.finaldemo.mysql_utils;
 
+//<editor-fold defaultstate="collapsed" desc="IMPORT">
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.naming.NamingException;
+//</editor-fold>
 
 /**
  *
