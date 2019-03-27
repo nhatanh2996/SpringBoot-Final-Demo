@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping(value = "/")
     public String homePage(Model model) {
         // model.addAttribute("user", new UserDTO());
-        return "index";
+        return "login";
     }
 //</editor-fold>
 
