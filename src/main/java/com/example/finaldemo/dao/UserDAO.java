@@ -97,6 +97,7 @@ public class UserDAO implements Serializable {
                 e.printStackTrace();
             }
         }
+        String msg;
         return "add_failed";
 
     }
