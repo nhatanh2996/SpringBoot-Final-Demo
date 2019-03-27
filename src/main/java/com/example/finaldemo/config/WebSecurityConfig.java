@@ -1,18 +1,11 @@
 package com.example.finaldemo.config;
 
 //<editor-fold defaultstate="collapsed" desc="IMPORT">
-import java.util.Arrays;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
@@ -41,13 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/remove").permitAll()
                 .antMatchers("/testGet").permitAll()
                 .antMatchers("/testPost").permitAll()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login?error")
+//                .and()
+//                .formLogin()
+//                .loginPage("/login")
+//                .usernameParameter("username")
+//                .passwordParameter("password")
+//                .defaultSuccessUrl("/")
+//                .failureUrl("/login?error")
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/403");
@@ -56,13 +49,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 csrf().disable();
     }
 
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-                .addResourceHandler("/resources/**")
-                .addResourceLocations("/resources/", "/other-resources/")
-                .setCachePeriod(3600)
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver());
-
-    }
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry
+//                .addResourceHandler("/resources/**")
+//                .addResourceLocations("/resources/", "/other-resources/")
+//                .setCachePeriod(3600)
+//                .resourceChain(true)
+//                .addResolver(new PathResourceResolver());
+//
+//    }
 }

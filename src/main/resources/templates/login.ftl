@@ -12,13 +12,12 @@ This is content
         </head>
     <body>
         <div class="main-content">
-            <h3>Login to continue</h3>
-            <form action="login" method="POST">
+            <h3>Login Form</h3>
+            <form action="/login" method="POST">
 
                 <input type="text" name="username" placeholder="Username" /><br />
                 <input type="password" name="password" placeholder="Password" /><br />
                 <button type="submit">Login</button> <br />
-                <!--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
                 </form>
             </div>
         </body>

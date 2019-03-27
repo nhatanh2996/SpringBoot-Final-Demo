@@ -54,8 +54,8 @@ public class UserController {
     @PostMapping(value = "/login")
     public String login(@RequestParam(name = "username") String username,
             @RequestParam(name = "password") String password, HttpSession session) {
-
-        if (userService.checkLogin(username, password)) {
+            boolean check = userService.checkLogin(username, password);
+        if (check) {
 
             UserDTO userDTO = userService.findUserByUsername(username);
             session.setAttribute("userLogged", userDTO);
